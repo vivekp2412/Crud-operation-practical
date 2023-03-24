@@ -1,0 +1,17 @@
+#product-box{
+ margin-top: 2rem;
+ display: flex;
+ flex-wrap: wrap;
+}
+textarea{
+    resize: none;
+}
+.card{
+    margin: 2rem;
+}
+.card-title{
+    font-weight: bold;
+}
+.price{
+    color: black !important;
+}
