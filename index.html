@@ -42,6 +42,40 @@
             </div>
             <button type="submit" onclick="manageinput()" class="btn btn-primary">Submit</button>
           </form>
+          <div class="filter-sort container row">
+            <div class="sort col-md-6">
+              <select class="form-select" id="sort-category" onchange="sortfunction()" aria-label="Default select example">
+                <!-- <option selected>Sort:-</option> -->
+                <option value="name" selected>Name</option>
+                <option value="price">price</option>
+                <option value="id">Id</option>
+              </select>
+              <select class="form-select" id = "sort-type"aria-label="Default select example" onchange="sortfunction()">
+                <option value="asc" selected>Asc</option>
+                <option value="des">des</option>
+              </select>
+            </div>
+           <div class="filter">
+            <form>
+              <div class="mb-3 col-md-6">
+                <label for="filtertext" class="form-label">Filter</label>
+                <select class="form-select" id="filter-category"  aria-label="Default select example">
+                  <!-- <option selected>Sort:-</option> -->
+                  <option value="name" selected>Name</option>
+                  <option value="price">price</option>
+                  <option value="id">Id</option>
+                </select>
+                <input type="text" class="form-control" id="filtertext" aria-describedby="emailHelp">
+              </div>
+              <button type="submit" onclick="filter()" class="btn btn-primary">Submit</button>
+              <button type="button" class="btn btn-primary" onclick="cancelfilter()">Close Filter</button>
+              
+            </form>
+           
+           </div>
+           
+          </div>
+         
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content" id="modal">

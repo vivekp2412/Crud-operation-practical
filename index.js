@@ -1,6 +1,4 @@
 let  products=[];
-let uploadPic = document.querySelector("#productimage");
-let imgUrl;
 let form = document.getElementById("inputform");
 if(JSON.parse(localStorage.getItem("Products"))!=null){
     products = JSON.parse(localStorage.getItem("Products"));
@@ -9,19 +7,97 @@ form.addEventListener("submit", function(event){
     event.preventDefault();
     form.reset();
 })
-uploadPic.onchange = () => { 
-    console.log("hi")
-    if (uploadPic.files[0].size < 1000000) { 
-        let fReader = new FileReader(); 
-        fReader.onload = function (e) { 
-             imgUrl = e.target.result; 
-             };
-             fReader.readAsDataURL(uploadPic.files[0]);
-    } else {
-             alert("File Size is too Long");
-    }};
+let mimgUrl;
+let imgUrl;
+let sortcategory = document.getElementById("sort-category");
+let sorttype = document.getElementById("sort-type");
+let isasc=false;
+
+function sortfunction(){
+    sortcategory = document.getElementById("sort-category").value;
+    sorttype = document.getElementById("sort-type").value;
+    if(sorttype=="asc"){
+        isasc=true;
+    }else{
+        isasc=false;
+    }
+    
+    products = JSON.parse(localStorage.getItem("Products"));
+    if(sortcategory=="name"){
+        if(isasc){
+            products.sort(function(a,b){
+                let x = a.name.toUpperCase();
+                let y = b.name.toUpperCase();
+                if(x<y){
+                    return -1;
+                }else if(x>y){
+                    return 1;
+                }else{
+                    return 0
+                }
+            });
+        }else{
+            products.sort(function(a,b){
+                let x = a.name.toUpperCase();
+                let y = b.name.toUpperCase();
+                if(x<y){
+                    return 1;
+                }else if(x>y){
+                    return -1;
+                }else{
+                    return 0
+                }
+            });
+        }
+
+    }else if(sortcategory=="price"){
+        if(isasc){
+            products.sort(function(a,b){return a.price-b.price});
+        }else{
+            products.sort(function(a,b){return b.price-a.price});
+        }
+
+    }else if(sortcategory=="id"){
+        if(isasc){
+            products.sort(function(a,b){return a.id-b.id});
+        }else{
+            products.sort(function(a,b){return b.id-a.id});
+        }
+    }
+    showall(products);
+}
+function filter(){
+    let filtercategory =  document.getElementById("filter-category").value;
+    let filtervalue  = document.getElementById("filtertext").value;
+    products =  JSON.parse(localStorage.getItem("Products"));
+     let filtered_array = products.filter(function(x){
+        if(x[filtercategory]==filtervalue) {
+            return x;
+        }
+        
+    });
+     console.log(filtered_array);
+     showall(filtered_array)
+}
+function cancelfilter(){
+    document.getElementById("filtertext").value=null;
+    products = JSON.parse(localStorage.getItem("Products"));
+    showall(products);
+}
+let uploadPic = document.querySelector("#productimage");
+    uploadPic.onchange = () => { 
+        if (uploadPic.files[0].size < 1000000) { 
+            let fReader = new FileReader(); 
+            fReader.onload = function (e) { 
+                 imgUrl = e.target.result; 
+                 };
+                 fReader.readAsDataURL(uploadPic.files[0]);
+        } else {
+                 alert("File Size is too Long");
+        }};
 
 function manageinput(){
+
     let name = document.getElementById("productname").value;
     let id = document.getElementById("productid").value;
     let description = document.getElementById("productdescrp").value;
@@ -39,7 +115,6 @@ function manageinput(){
     });
     localStorage.setItem("Products" , JSON.stringify(products));
     products =  JSON.parse(localStorage.getItem("Products"));
-    console.log(products);
     showall(JSON.parse(localStorage.getItem("Products")));
     
 }
@@ -92,20 +167,16 @@ function showall(arr){
     container.innerHTML=html;
 }
 function deleteitem(x){
-    console.log(`delete ${x}`);
     products = JSON.parse(localStorage.getItem("Products"));
-    console.log(products);
     products.forEach(element => {
         if(element.id==x){
             let index = products.indexOf(element);
-            console.log(index);
             if(products.length>1){
                 products.splice(index,1);
             }
             else{
                 products=[];
             }
-            console.log(products);
             return;
         }
     });
@@ -116,17 +187,10 @@ function deleteitem(x){
 }
 function updateitem(x){
     let modelbody = document.getElementById("modal");
-    console.log(modelbody);
     products = JSON.parse(localStorage.getItem("Products"));
-    // console.log(products);
-    // let mname = document.getElementById("productname").value;
-    // let mid = document.getElementById("productid").value;
-    // let mdescription = document.getElementById("productdescrp").value;
-    // let mprice = document.getElementById("productprice").value;
     products.forEach(element => {
         if(element.id==x){
             let index = products.indexOf(element);
-            console.log(element.description);
             modelbody.innerHTML = `
             <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Update</h5>
@@ -155,14 +219,14 @@ function updateitem(x){
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="productimage">Image</label>
-                  <input type="file" class="form-control" id="mproductimage" required>
+                  <input type="file" class="form-control" onchange="changeimg()" id="mproductimage">
                 </div>
               </div>
           </form>
           </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="editdata(${element.id})">Save changes</button>
+          <button type="button" class="btn btn-primary" onclick="editdata(${element.id})" data-dismiss="modal">Save changes</button>
         </div>`
             return;
         }
@@ -170,25 +234,42 @@ function updateitem(x){
     localStorage.setItem("Products" , JSON.stringify(products));
     showall(JSON.parse(localStorage.getItem("Products")));
 }
+
+function changeimg(){
+    let muploadPic = document.querySelector("#mproductimage"); 
+    let mfReader = new FileReader(); 
+    mfReader.onload = function (e) { 
+         mimgUrl = e.target.result; 
+         console.log(mimgUrl);
+         };
+         mfReader.readAsDataURL(muploadPic.files[0]);
+}
+
 function editdata(x){
-    let mname = document.getElementById("productname").value;
-    let mid = document.getElementById("productid").value;
-    let mdescription = document.getElementById("productdescrp").value;
-    let mprice = document.getElementById("productprice").value;
+ 
+    let mname = document.getElementById("mproductname").value;
+    let mid = document.getElementById("mproductid").value;
+    let mdescription = document.getElementById("mproductdescrp").value;
+    let mprice = document.getElementById("mproductprice").value;
     let products = JSON.parse(localStorage.getItem("Products"));
     products.forEach(element=>{
-        if(element.id==mid){
-            var index =  products.indexOf(element);
-            products.insert(index,{id:mid,
-                name:mname,
-                description:mdescription,
-                price:mprice,
-                imageUrl:imgUrl});
-                localStorage.setItem("Products" , JSON.stringify(products));
-            
+        if(element.id==x){
+            let index =  products.indexOf(element);
+            console.log(index);
+            products[index].id=mid;
+            products[index].name=mname;
+            products[index].price=mprice;
+            products[index].description=mdescription;
+            if(mimgUrl==undefined){
+                mimgUrl=element.imageUrl;
+            }
+            products[index].imageUrl=mimgUrl;
+            localStorage.setItem("Products" , JSON.stringify(products));
+        
         }
     
     })
-    
+    mimgUrl=undefined;
+    showall(JSON.parse(localStorage.getItem("Products")));
 }
 showall(JSON.parse(localStorage.getItem("Products")));
