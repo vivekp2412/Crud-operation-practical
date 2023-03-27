@@ -40,35 +40,44 @@
                 <input type="file" class="form-control" id="productimage" required>
               </div>
             </div>
-            <button type="submit" onclick="manageinput()" class="btn btn-primary">Submit</button>
+            <button type="submit" onclick="manageinput()" class="btn btn-dark">Submit</button>
           </form>
           <div class="filter-sort container row">
             <div class="sort col-md-6">
-              <select class="form-select" id="sort-category" onchange="sortfunction()" aria-label="Default select example">
+              <h3 class="title">Sort</h3>
+              
+                <select class="form-select" id="sort-category" aria-label="Default select example">
                 <!-- <option selected>Sort:-</option> -->
                 <option value="name" selected>Name</option>
                 <option value="price">price</option>
                 <option value="id">Id</option>
               </select>
-              <select class="form-select" id = "sort-type"aria-label="Default select example" onchange="sortfunction()">
-                <option value="asc" selected>Asc</option>
-                <option value="des">des</option>
+              <select class="form-select" id = "sort-type"aria-label="Default select example">
+                <option class="options" value="asc" selected>Asc</option>
+                <option class="options" value="des">des</option>
               </select>
+
+              
+              <button type="button" class="btn btn-dark" id="sortbutton"onclick="sortfunction()">Sort</button>
+
             </div>
            <div class="filter">
             <form>
               <div class="mb-3 col-md-6">
-                <label for="filtertext" class="form-label">Filter</label>
+                <label for="filtertext" class="form-label title">Filter</label>
+                <input type="text" class="form-control" id="filtertext" aria-describedby="emailHelp">
+              </div>
                 <select class="form-select" id="filter-category"  aria-label="Default select example">
                   <!-- <option selected>Sort:-</option> -->
                   <option value="name" selected>Name</option>
                   <option value="price">price</option>
                   <option value="id">Id</option>
                 </select>
-                <input type="text" class="form-control" id="filtertext" aria-describedby="emailHelp">
-              </div>
-              <button type="submit" onclick="filter()" class="btn btn-primary">Submit</button>
-              <button type="button" class="btn btn-primary" onclick="cancelfilter()">Close Filter</button>
+
+            
+              <button type="submit" onclick="filter()" class="btn btn-dark">Apply Filter</button>
+              
+              <button type="button" class="btn btn-dark" onclick="cancelfilter()">Clear Filter</button>
               
             </form>
            

@@ -1,4 +1,5 @@
 let  products=[];
+let issort=true;
 let form = document.getElementById("inputform");
 if(JSON.parse(localStorage.getItem("Products"))!=null){
     products = JSON.parse(localStorage.getItem("Products"));
@@ -14,57 +15,68 @@ let sorttype = document.getElementById("sort-type");
 let isasc=false;
 
 function sortfunction(){
-    sortcategory = document.getElementById("sort-category").value;
-    sorttype = document.getElementById("sort-type").value;
-    if(sorttype=="asc"){
-        isasc=true;
-    }else{
-        isasc=false;
-    }
+    if(issort){
+
+        sortcategory = document.getElementById("sort-category").value;
+        sorttype = document.getElementById("sort-type").value;
+        if(sorttype=="asc"){
+            isasc=true;
+        }else{
+            isasc=false;
+        }
+        
+        products = JSON.parse(localStorage.getItem("Products"));
+        if(sortcategory=="name"){
+            if(isasc){
+                products.sort(function(a,b){
+                    let x = a.name.toUpperCase();
+                    let y = b.name.toUpperCase();
+                    if(x<y){
+                        return -1;
+                    }else if(x>y){
+                        return 1;
+                    }else{
+                        return 0
+                    }
+                });
+            }else{
+                products.sort(function(a,b){
+                    let x = a.name.toUpperCase();
+                    let y = b.name.toUpperCase();
+                    if(x<y){
+                        return 1;
+                    }else if(x>y){
+                        return -1;
+                    }else{
+                        return 0
+                    }
+                });
+            }
     
-    products = JSON.parse(localStorage.getItem("Products"));
-    if(sortcategory=="name"){
-        if(isasc){
-            products.sort(function(a,b){
-                let x = a.name.toUpperCase();
-                let y = b.name.toUpperCase();
-                if(x<y){
-                    return -1;
-                }else if(x>y){
-                    return 1;
-                }else{
-                    return 0
-                }
-            });
-        }else{
-            products.sort(function(a,b){
-                let x = a.name.toUpperCase();
-                let y = b.name.toUpperCase();
-                if(x<y){
-                    return 1;
-                }else if(x>y){
-                    return -1;
-                }else{
-                    return 0
-                }
-            });
+        }else if(sortcategory=="price"){
+            if(isasc){
+                products.sort(function(a,b){return a.price-b.price});
+            }else{
+                products.sort(function(a,b){return b.price-a.price});
+            }
+    
+        }else if(sortcategory=="id"){
+            if(isasc){
+                products.sort(function(a,b){return a.id-b.id});
+            }else{
+                products.sort(function(a,b){return b.id-a.id});
+            }
         }
-
-    }else if(sortcategory=="price"){
-        if(isasc){
-            products.sort(function(a,b){return a.price-b.price});
-        }else{
-            products.sort(function(a,b){return b.price-a.price});
-        }
-
-    }else if(sortcategory=="id"){
-        if(isasc){
-            products.sort(function(a,b){return a.id-b.id});
-        }else{
-            products.sort(function(a,b){return b.id-a.id});
-        }
+        issort=false;
+        showall(products);
+        document.getElementById("sortbutton").innerHTML="Clear Sort";
+        return;
+    }else{
+        issort=true;
+        document.getElementById("sortbutton").innerHTML="Sort";
+        showall(JSON.parse(localStorage.getItem("Products")));
+        return;
     }
-    showall(products);
 }
 function filter(){
     let filtercategory =  document.getElementById("filter-category").value;
