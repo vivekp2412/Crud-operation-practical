@@ -27,3 +27,24 @@ textarea{
     margin: 5%;
     /* justify-items: center; */
 }
+nav{
+    margin-bottom: 2%;
+}
+.nav-item{
+    margin: 2% 5%;
+}
+.navbar-brand{
+    font-size: larger;
+    font-weight: bolder;
+
+}
+.fa-solid{
+    color: white;
+}
+.form-select{
+    width: 50%;
+    margin: 0 0%;
+}
+button{
+    margin: 0 0.5rem;
+}

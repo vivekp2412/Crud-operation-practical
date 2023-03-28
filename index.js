@@ -1,5 +1,4 @@
 let  products=[];
-let issort=true;
 let form = document.getElementById("inputform");
 if(JSON.parse(localStorage.getItem("Products"))!=null){
     products = JSON.parse(localStorage.getItem("Products"));
@@ -11,14 +10,22 @@ form.addEventListener("submit", function(event){
 let mimgUrl;
 let imgUrl;
 let sortcategory = document.getElementById("sort-category");
-let sorttype = document.getElementById("sort-type");
+// let sorttype = document.getElementById("sort-type");
 let isasc=false;
-
+function togglesort(){
+    if(isasc==false){
+        sorttype="asc";
+        sortfunction();
+        return
+    }else{
+        sorttype="des";
+        sortfunction();
+        return
+    }
+}
 function sortfunction(){
-    if(issort){
 
         sortcategory = document.getElementById("sort-category").value;
-        sorttype = document.getElementById("sort-type").value;
         if(sorttype=="asc"){
             isasc=true;
         }else{
@@ -67,20 +74,19 @@ function sortfunction(){
                 products.sort(function(a,b){return b.id-a.id});
             }
         }
-        issort=false;
         showall(products);
-        document.getElementById("sortbutton").innerHTML="Clear Sort";
+        // document.getElementById("sortbutton").innerHTML="Clear Sort";
         return;
-    }else{
-        issort=true;
-        document.getElementById("sortbutton").innerHTML="Sort";
-        showall(JSON.parse(localStorage.getItem("Products")));
-        return;
-    }
 }
+function cancelsort(){
+    products =  JSON.parse(localStorage.getItem("Products"));
+    showall(products);
+}
+
 function filter(){
     let filtercategory =  document.getElementById("filter-category").value;
     let filtervalue  = document.getElementById("filtertext").value;
+    console.log(filtercategory,filtervalue);
     products =  JSON.parse(localStorage.getItem("Products"));
      let filtered_array = products.filter(function(x){
         if(x[filtercategory]==filtervalue) {
@@ -107,13 +113,21 @@ let uploadPic = document.querySelector("#productimage");
         } else {
                  alert("File Size is too Long");
         }};
-
+function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+ }
+function setproductid(){
+     document.getElementById("productid").value=Math.trunc(getRandomArbitrary(1000,9999))
+    
+}
 function manageinput(){
-
+  let form = document.getElementById("inputform");
     let name = document.getElementById("productname").value;
     let id = document.getElementById("productid").value;
     let description = document.getElementById("productdescrp").value;
     let price = document.getElementById("productprice").value;
+    let submitbutton=  document.getElementById("submitbutton");
+    submitbutton.setAttribute("data-dismiss","modal")
     if(name==""|| id==""||description==""||price==""||imgUrl==""){
         alert("please fill the marked field")
         return;
@@ -128,7 +142,7 @@ function manageinput(){
     localStorage.setItem("Products" , JSON.stringify(products));
     products =  JSON.parse(localStorage.getItem("Products"));
     showall(JSON.parse(localStorage.getItem("Products")));
-    
+    form.reset();
 }
 function showitem(arr){
     let html="";
@@ -285,3 +299,6 @@ function editdata(x){
     showall(JSON.parse(localStorage.getItem("Products")));
 }
 showall(JSON.parse(localStorage.getItem("Products")));
+function callback(){
+    console.log("hello");
+}
