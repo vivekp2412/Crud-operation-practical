@@ -1,5 +1,10 @@
 let  products=[];
+let formFormate = /^\s*(?!\s$)\S.*\S\s*$/;
 let form = document.getElementById("inputform");
+let mimgUrl;
+let imgUrl;
+let sortcategory = document.getElementById("sort-category");
+let isasc=false;
 if(JSON.parse(localStorage.getItem("Products"))!=null){
     products = JSON.parse(localStorage.getItem("Products"));
 }
@@ -7,17 +12,18 @@ form.addEventListener("submit", function(event){
     event.preventDefault();
     form.reset();
 })
-let mimgUrl;
-let imgUrl;
-let sortcategory = document.getElementById("sort-category");
-// let sorttype = document.getElementById("sort-type");
-let isasc=false;
 function togglesort(){
     if(isasc==false){
+        document.getElementById("sort-symbol").classList.add("fa-arrow-up");
+        document.getElementById("sort-symbol").classList.remove("fa-arrow-down");
         sorttype="asc";
+
         sortfunction();
         return
     }else{
+        document.getElementById("sort-symbol").classList.remove("fa-arrow-up");
+        document.getElementById("sort-symbol").classList.add("fa-arrow-down");
+        
         sorttype="des";
         sortfunction();
         return
@@ -83,21 +89,30 @@ function cancelsort(){
     showall(products);
 }
 
-function filter(){
+function search(){
     let filtercategory =  document.getElementById("filter-category").value;
     let filtervalue  = document.getElementById("filtertext").value;
+    if(filtervalue.length==0){
+        alert("Please enter something");
+        return
+    }
     console.log(filtercategory,filtervalue);
     products =  JSON.parse(localStorage.getItem("Products"));
      let filtered_array = products.filter(function(x){
-        if(x[filtercategory]==filtervalue) {
+        if(x[filtercategory].toUpperCase()==filtervalue.toUpperCase()) {
             return x;
         }
         
     });
+    if(filtered_array.length==0){
+        alert("No Such Product Found");
+        document.getElementById("filtertext").value="";
+        return
+    }
      console.log(filtered_array);
      showall(filtered_array)
 }
-function cancelfilter(){
+function cancelsearch(){
     document.getElementById("filtertext").value=null;
     products = JSON.parse(localStorage.getItem("Products"));
     showall(products);
@@ -120,71 +135,69 @@ function setproductid(){
      document.getElementById("productid").value=Math.trunc(getRandomArbitrary(1000,9999))
     
 }
+function resetform(){
+    form.reset();
+}
 function manageinput(){
+    
+
   let form = document.getElementById("inputform");
     let name = document.getElementById("productname").value;
     let id = document.getElementById("productid").value;
     let description = document.getElementById("productdescrp").value;
     let price = document.getElementById("productprice").value;
     let submitbutton=  document.getElementById("submitbutton");
-    submitbutton.setAttribute("data-dismiss","modal")
-    if(name==""|| id==""||description==""||price==""||imgUrl==""){
-        alert("please fill the marked field")
-        return;
-    }
-    products.push({
-        id:id,
-        name:name,
-        description:description,
-        price:price,
-        imageUrl:imgUrl
-    });
-    localStorage.setItem("Products" , JSON.stringify(products));
-    products =  JSON.parse(localStorage.getItem("Products"));
-    showall(JSON.parse(localStorage.getItem("Products")));
-    form.reset();
-}
-function showitem(arr){
-    let html="";
-    if(arr.length==0){
-       document.querySelector("#product-box").innerHTML="empty";
+    submitbutton.removeAttribute("data-dismiss","modal");
+    if(!name.match(formFormate)||!price.match(formFormate)||!description.match(formFormate)||imgUrl==null){
+        alert("Please fill all the Details");
+        return
     }else{
-        for(let i =arr.length-1;i>arr.length-2;i--){
-            html=html+ `<div id=${arr[i].id} class="card" style="width: 18rem;">
-            <div class="card-body">
-                
-              <h5 class="card-title">${arr[i].name}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">Product Id:${arr[i].id}</h6>
-              <h6 class="card-subtitle mb-2 text-muted">Price:${arr[i].price}</h6>
-              <img class="card-img-top" src=${arr[i].imageUrl} alt="Card image cap">
-              <p class="card-text"><b>Description:-</b>${arr[i].description}</p>
-              <a href="#" onclick="deleteitem(${arr[i].id}) class="card-link">Delete</a>
-              <a href="./view.html?id=${arr[i].id}" class="card-link">View</a>
-            </div>
-          </div>`
-        }
+        submitbutton.setAttribute("data-dismiss","modal");
+
+        products.push({
+            id:id,
+            name:name,
+            description:description,
+            price:price,
+            imageUrl:imgUrl
+        });
+        form.reset();
+        localStorage.setItem("Products" , JSON.stringify(products));
+        products =  JSON.parse(localStorage.getItem("Products"));
+        showall(JSON.parse(localStorage.getItem("Products")));
     }
-    let container =  document.getElementById("product-box");
-    container.innerHTML+=html;
+   
+   
 }
+
 function showall(arr){
     let html="";
     if(arr.length==0){
         html=html+"<div>Nothing to  show</div>"
     }else{
         for(let i =0;i<arr.length;i++){
-            html=html+ `<div id=${arr[i].id} class="card" style="width: 18rem;">
+            html=html+ `
+            <div id=${arr[i].id} class="card" style="width: 18rem;">
             <div class="card-body">
-                
-              <h3 class="card-title">${arr[i].name}</h3>
-              <h6 class="card-subtitle mb-2 text-muted">Product Id:${arr[i].id}</h6>
-              <h5 class="card-subtitle mb-2 text-muted price"><b>Price-Rs&nbsp${arr[i].price}<b></h5>
-              <img class="card-img-top" src=${arr[i].imageUrl} alt="Card image cap">
-              <p class="card-text"><b>Description:-</b>${arr[i].description}</p>
-              <a href="#" onclick="deleteitem(${arr[i].id})" class="card-link">Delete</a>
-              <a href="./view.html?id=${arr[i].id}" class="card-link">View</a>
-              <a href="#" onclick="updateitem(${arr[i].id})"class="card-link" data-toggle="modal" data-target="#exampleModal">Edit</a>
-  
+            
+            <div class="card-img-top"> 
+            <img src=${arr[i].imageUrl} alt="Card image cap">
+            
+        </div>
+
+        <div class="card-details">
+            <h3 class="card-title">${arr[i].name}</h3>
+            <h6 class="card-subtitle mb-2 text-muted">Product Id:${arr[i].id}</h6>
+            <h5 class="card-subtitle mb-2 text-muted price"><b>Price-Rs&nbsp${arr[i].price}</b></h5>
+            
+           
+            <p class="card-text"><b>Description:-</b>${arr[i].description}</p>
+            <a href="#" onclick="deleteitem(${arr[i].id})" class="card-link">Delete</a>
+            <a href="./view.html?id=${arr[i].id}" class="card-link">View</a>
+            <a href="#" onclick="updateitem(${arr[i].id})"class="card-link" data-toggle="modal" data-target="#exampleModal">Edit</a>
+            
+            
+            </div>
             </div>
           </div>`
         }
@@ -252,7 +265,7 @@ function updateitem(x){
           </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="editdata(${element.id})" data-dismiss="modal">Save changes</button>
+          <button type="button" class="btn btn-primary" onclick="editdata(${element.id})" id="editform-submit">Save changes</button>
         </div>`
             return;
         }
@@ -278,7 +291,15 @@ function editdata(x){
     let mdescription = document.getElementById("mproductdescrp").value;
     let mprice = document.getElementById("mproductprice").value;
     let products = JSON.parse(localStorage.getItem("Products"));
+    let esubmitbutton =  document.getElementById("editform-submit");
+    esubmitbutton.removeAttribute("data-dismiss","modal");
+
+    if(!mname.match(formFormate)||!mdescription.match(formFormate)||!mprice.match(formFormate)){
+        alert("Please fill all the Details");
+        return
+    }
     products.forEach(element=>{
+        esubmitbutton.setAttribute("data-dismiss","modal");
         if(element.id==x){
             let index =  products.indexOf(element);
             console.log(index);
@@ -302,3 +323,6 @@ showall(JSON.parse(localStorage.getItem("Products")));
 function callback(){
     console.log("hello");
 }
+
+
+
