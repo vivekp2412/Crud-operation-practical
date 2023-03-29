@@ -89,29 +89,7 @@ function cancelsort(){
     showall(products);
 }
 
-function search(){
-    let filtercategory =  document.getElementById("filter-category").value;
-    let filtervalue  = document.getElementById("filtertext").value;
-    if(filtervalue.length==0){
-        alert("Please enter something");
-        return
-    }
-    console.log(filtercategory,filtervalue);
-    products =  JSON.parse(localStorage.getItem("Products"));
-     let filtered_array = products.filter(function(x){
-        if(x[filtercategory].toUpperCase()==filtervalue.toUpperCase()) {
-            return x;
-        }
-        
-    });
-    if(filtered_array.length==0){
-        alert("No Such Product Found");
-        document.getElementById("filtertext").value="";
-        return
-    }
-     console.log(filtered_array);
-     showall(filtered_array)
-}
+
 function cancelsearch(){
     document.getElementById("filtertext").value=null;
     products = JSON.parse(localStorage.getItem("Products"));
@@ -320,9 +298,41 @@ function editdata(x){
     showall(JSON.parse(localStorage.getItem("Products")));
 }
 showall(JSON.parse(localStorage.getItem("Products")));
-function callback(){
-    console.log("hello");
+function search(){
+    let filtercategory =  document.getElementById("filter-category").value;
+    let filtervalue  = document.getElementById("filtertext").value;
+    // if(filtervalue.length==0){
+    //     alert("Please enter something");
+    //     return
+    // }
+    console.log(filtercategory,filtervalue);
+    products =  JSON.parse(localStorage.getItem("Products"));
+     let filtered_array = products.filter(function(x){
+        if(x[filtercategory].toUpperCase().includes(filtervalue.toUpperCase())) {
+            return x;
+        }
+        
+    });
+    // if(filtered_array.length==0){
+    //     alert("No Such Product Found");
+    //     document.getElementById("filtertext").value="";
+    //     return
+    // }
+     console.log(filtered_array);
+     showall(filtered_array)
 }
 
-
-
+function debounce(){
+    let timer;
+    return function(){
+        clearTimeout(timer);
+        timer=setTimeout(()=>{
+          search();
+        },300)
+    }
+    
+}
+// const hey = function(){
+//     console.log("hi");
+// }
+const searchproduct =  debounce()
