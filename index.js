@@ -3,6 +3,7 @@ let formFormate = /^\s*(?!\s$)\S.*\S\s*$/;
 let form = document.getElementById("inputform");
 let mimgUrl;
 let imgUrl;
+let applyfilter=true;
 let sortcategory = document.getElementById("sort-category");
 let isasc=false;
 if(JSON.parse(localStorage.getItem("Products"))!=null){
@@ -155,7 +156,8 @@ function showall(arr){
     }else{
         for(let i =0;i<arr.length;i++){
             html=html+ `
-            <div id=${arr[i].id} class="card" style="width: 18rem;">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+            <div id=${arr[i].id} class="card">
             <div class="card-body">
             
             <div class="card-img-top"> 
@@ -164,17 +166,21 @@ function showall(arr){
         </div>
 
         <div class="card-details">
-            <h3 class="card-title">${arr[i].name}</h3>
+            <h4 class="card-title">${arr[i].name}</h4>
             <h6 class="card-subtitle mb-2 text-muted">Product Id:${arr[i].id}</h6>
-            <h5 class="card-subtitle mb-2 text-muted price"><b>Price-Rs&nbsp${arr[i].price}</b></h5>
+            <h5 class="card-subtitle mb-2 text-success"><b>Rs&nbsp${arr[i].price}</b></h5>
             
            
-            <p class="card-text"><b>Description:-</b>${arr[i].description}</p>
-            <a href="#" onclick="deleteitem(${arr[i].id})" class="card-link">Delete</a>
-            <a href="./view.html?id=${arr[i].id}" class="card-link">View</a>
-            <a href="#" onclick="updateitem(${arr[i].id})"class="card-link" data-toggle="modal" data-target="#exampleModal">Edit</a>
+            <p class="card-text description">${arr[i].description}</p>
+            <div class="card-button-group">
+           <a href="#" onclick="deleteitem(${arr[i].id})" class="card-link"> <button type="button" class="btn btn-outline-danger">Delete</button></a>
+            <a href="./view.html?id=${arr[i].id}" class="card-link"><button type="button" class="btn btn-outline-primary">View</button></a>
+            <a href="#" onclick="updateitem(${arr[i].id})"class="card-link" data-toggle="modal" data-target="#exampleModal"><button type="button" class="btn btn-outline-success">Edit</button></a>
+            </div>
+
             
             
+            </div>
             </div>
             </div>
           </div>`
@@ -236,7 +242,7 @@ function updateitem(x){
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="productimage">Image</label>
-                  <input type="file" class="form-control" onchange="changeimg()" id="mproductimage">
+                  <input type="file" class="form-control" onchange="changeimg()" accept="image/png, image/jpg, image/jpeg" id="mproductimage">
                 </div>
               </div>
           </form>
@@ -313,15 +319,10 @@ function search(){
         }
         
     });
-    // if(filtered_array.length==0){
-    //     alert("No Such Product Found");
-    //     document.getElementById("filtertext").value="";
-    //     return
-    // }
      console.log(filtered_array);
      showall(filtered_array)
 }
-
+//debouncing
 function debounce(){
     let timer;
     return function(){
@@ -332,7 +333,35 @@ function debounce(){
     }
     
 }
-// const hey = function(){
-//     console.log("hi");
-// }
-const searchproduct =  debounce()
+const searchproduct =  debounce();
+
+
+function updaterange(){
+    let rangevalue;
+    rangevalue = document.getElementById("pricefilter").value;
+    document.getElementById("currentvalue").innerHTML=rangevalue;
+}
+updaterange();
+function clearrange(){
+    document.getElementById("pricefilter").value=10000;
+    updaterange();
+    showall(JSON.parse(localStorage.getItem("Products")));
+    
+}
+function showrange(){
+    updaterange();
+    rangevalue = document.getElementById("pricefilter").value;
+    products =  JSON.parse(localStorage.getItem("Products"));
+    let filtered_array = products.filter(function(x){
+        if(Number(x.price)>=0 && Number(x.price)<=Number(rangevalue)) {
+            return x;
+        }
+        
+    });
+    showall(filtered_array)
+    document.getElementById("filterbutton").innerHTML="Clear Filter";
+    applyfilter=false;
+}
+
+
+    _
