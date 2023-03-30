@@ -1,4 +1,5 @@
-let  products=[];
+// Variables declaration
+let products=[];
 let formFormate = /^\s*(?!\s$)\S.*\S\s*$/;
 let form = document.getElementById("inputform");
 let mimgUrl;
@@ -6,39 +7,34 @@ let imgUrl;
 let applyfilter=true;
 let sortcategory = document.getElementById("sort-category");
 let isasc=false;
+// Fetching the Local stored array if not null 
 if(JSON.parse(localStorage.getItem("Products"))!=null){
     products = JSON.parse(localStorage.getItem("Products"));
 }
-form.addEventListener("submit", function(event){
-    event.preventDefault();
-    form.reset();
-})
+// Toggle Sort Icon and Sorting  function
 function togglesort(){
     if(isasc==false){
-        document.getElementById("sort-symbol").classList.add("fa-arrow-up");
-        document.getElementById("sort-symbol").classList.remove("fa-arrow-down");
+        document.getElementById("sort-symbol").classList.remove("fa-arrow-up");
+        document.getElementById("sort-symbol").classList.add("fa-arrow-down");
         sorttype="asc";
-
         sortfunction();
         return
     }else{
-        document.getElementById("sort-symbol").classList.remove("fa-arrow-up");
-        document.getElementById("sort-symbol").classList.add("fa-arrow-down");
-        
+        document.getElementById("sort-symbol").classList.add("fa-arrow-up");
+        document.getElementById("sort-symbol").classList.remove("fa-arrow-down");
         sorttype="des";
         sortfunction();
         return
     }
 }
+// Sorting Logic
 function sortfunction(){
-
         sortcategory = document.getElementById("sort-category").value;
         if(sorttype=="asc"){
             isasc=true;
         }else{
             isasc=false;
         }
-        
         products = JSON.parse(localStorage.getItem("Products"));
         if(sortcategory=="name"){
             if(isasc){
@@ -66,14 +62,12 @@ function sortfunction(){
                     }
                 });
             }
-    
         }else if(sortcategory=="price"){
             if(isasc){
                 products.sort(function(a,b){return a.price-b.price});
             }else{
                 products.sort(function(a,b){return b.price-a.price});
             }
-    
         }else if(sortcategory=="id"){
             if(isasc){
                 products.sort(function(a,b){return a.id-b.id});
@@ -82,20 +76,20 @@ function sortfunction(){
             }
         }
         showall(products);
-        // document.getElementById("sortbutton").innerHTML="Clear Sort";
         return;
 }
+// Clear Sort
 function cancelsort(){
     products =  JSON.parse(localStorage.getItem("Products"));
     showall(products);
 }
-
-
+// Clear Search Function
 function cancelsearch(){
     document.getElementById("filtertext").value=null;
     products = JSON.parse(localStorage.getItem("Products"));
     showall(products);
 }
+// Logic for Add Product Image Url Storing 
 let uploadPic = document.querySelector("#productimage");
     uploadPic.onchange = () => { 
         if (uploadPic.files[0].size < 1000000) { 
@@ -107,20 +101,21 @@ let uploadPic = document.querySelector("#productimage");
         } else {
                  alert("File Size is too Long");
         }};
+// Random ID Generator FUnction
 function getRandomArbitrary(min, max) {
             return Math.random() * (max - min) + min;
  }
+// Setting the Random ID in Form
 function setproductid(){
      document.getElementById("productid").value=Math.trunc(getRandomArbitrary(1000,9999))
-    
 }
+// RESETING THE FORM
 function resetform(){
     form.reset();
 }
+// ADDING NEW PRODUCT TO LOCAL STORAGE
 function manageinput(){
-    
-
-  let form = document.getElementById("inputform");
+    let form = document.getElementById("inputform");
     let name = document.getElementById("productname").value;
     let id = document.getElementById("productid").value;
     let description = document.getElementById("productdescrp").value;
@@ -132,7 +127,6 @@ function manageinput(){
         return
     }else{
         submitbutton.setAttribute("data-dismiss","modal");
-
         products.push({
             id:id,
             name:name,
@@ -145,10 +139,8 @@ function manageinput(){
         products =  JSON.parse(localStorage.getItem("Products"));
         showall(JSON.parse(localStorage.getItem("Products")));
     }
-   
-   
 }
-
+//Function to show product on Screen
 function showall(arr){
     let html="";
     if(arr.length==0){
@@ -156,39 +148,33 @@ function showall(arr){
     }else{
         for(let i =0;i<arr.length;i++){
             html=html+ `
-            <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
             <div id=${arr[i].id} class="card">
-            <div class="card-body">
-            
-            <div class="card-img-top"> 
-            <img src=${arr[i].imageUrl} alt="Card image cap">
-            
-        </div>
-
-        <div class="card-details">
-            <h4 class="card-title">${arr[i].name}</h4>
-            <h6 class="card-subtitle mb-2 text-muted">Product Id:${arr[i].id}</h6>
-            <h5 class="card-subtitle mb-2 text-success"><b>Rs&nbsp${arr[i].price}</b></h5>
-            
-           
-            <p class="card-text description">${arr[i].description}</p>
-            <div class="card-button-group">
-           <a href="#" onclick="deleteitem(${arr[i].id})" class="card-link"> <button type="button" class="btn btn-outline-danger">Delete</button></a>
-            <a href="./view.html?id=${arr[i].id}" class="card-link"><button type="button" class="btn btn-outline-primary">View</button></a>
-            <a href="#" onclick="updateitem(${arr[i].id})"class="card-link" data-toggle="modal" data-target="#exampleModal"><button type="button" class="btn btn-outline-success">Edit</button></a>
+                 <div class="card-body">
+                 <div class="card-img-top"> 
+                 <img src=${arr[i].imageUrl} alt="Card image cap">
+                 </div>
+                 <div class="card-details">
+                 <h4 class="card-title name">${arr[i].name}</h4>
+                 <h6 class="card-subtitle mb-2 text-muted">Product Id:${arr[i].id}</h6>
+                 <h5 class="card-subtitle mb-2 text-success price"><b>Rs&nbsp${arr[i].price}</b></h5>
+                 <p class="card-text description">${arr[i].description}</p>
+                 <div class="card-button-group">
+                 <a href="#" onclick="deleteitem(${arr[i].id})" class="card-link"> <button type="button" class="btn btn-outline-danger">Delete</button></a>
+                 <a href="./view.html?id=${arr[i].id}" class="card-link"><button type="button" class="btn btn-outline-primary">View</button></a>
+                 <a href="#" onclick="updateitem(${arr[i].id})"class="card-link" data-toggle="modal" data-target="#exampleModal"><button type="button" class="btn btn-outline-success">Edit</button></a>
+                 </div>
+                 </div>
+                 </div>
             </div>
-
-            
-            
-            </div>
-            </div>
-            </div>
-          </div>`
+        </div>`
         }
     }
     let container =  document.getElementById("product-box");
     container.innerHTML=html;
 }
+// Function to delete item
+
 function deleteitem(x){
     products = JSON.parse(localStorage.getItem("Products"));
     products.forEach(element => {
@@ -205,15 +191,29 @@ function deleteitem(x){
     });
     localStorage.setItem("Products" , JSON.stringify(products));
     showall(JSON.parse(localStorage.getItem("Products")));
-
-
 }
+// Function to autofill the value in edit form
+function modalValueAdder(x) {
+    let prod = JSON.parse(localStorage.getItem("Products"));
+    let data;
+    prod.forEach(element => {
+      if (element.id == x) {
+        data = element;
+      }
+    });
+    document.getElementById("mproductname").value =data.name;
+    document.getElementById("mproductid").value =data.id;
+    document.getElementById("mproductdescrp").value =data.description;
+    document.getElementById("mproductprice").value =data.price;
+  }
+// Edit modal opener function
 function updateitem(x){
     let modelbody = document.getElementById("modal");
-    products = JSON.parse(localStorage.getItem("Products"));
-    products.forEach(element => {
+    modelbody.innerHTML=""
+    let prod = JSON.parse(localStorage.getItem("Products"));
+    prod.forEach(element => {
         if(element.id==x){
-            let index = products.indexOf(element);
+            console.log(element);
             modelbody.innerHTML = `
             <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Update</h5>
@@ -239,6 +239,9 @@ function updateitem(x){
                 <label for="productprice">Price (INR)</label>
                 <input type="number" class="form-control" id="mproductprice" placeholder="Enter the Price" value=${element.price} required>
               </div>
+              <div>
+              <img class="edit-form-img" src=${element.imageUrl}>
+              </div>
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="productimage">Image</label>
@@ -251,25 +254,23 @@ function updateitem(x){
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" onclick="editdata(${element.id})" id="editform-submit">Save changes</button>
         </div>`
-            return;
-        }
+        modalValueAdder(element.id)
+       }
     });
-    localStorage.setItem("Products" , JSON.stringify(products));
-    showall(JSON.parse(localStorage.getItem("Products")));
 }
-
+// Edit Modal Image handler
 function changeimg(){
     let muploadPic = document.querySelector("#mproductimage"); 
+    let updatedimg = document.querySelector(".edit-form-img"); 
     let mfReader = new FileReader(); 
     mfReader.onload = function (e) { 
          mimgUrl = e.target.result; 
-         console.log(mimgUrl);
+         updatedimg.src = mimgUrl
          };
          mfReader.readAsDataURL(muploadPic.files[0]);
 }
-
+// Storing the edited data to local storage by fetching from update modal
 function editdata(x){
- 
     let mname = document.getElementById("mproductname").value;
     let mid = document.getElementById("mproductid").value;
     let mdescription = document.getElementById("mproductdescrp").value;
@@ -277,7 +278,6 @@ function editdata(x){
     let products = JSON.parse(localStorage.getItem("Products"));
     let esubmitbutton =  document.getElementById("editform-submit");
     esubmitbutton.removeAttribute("data-dismiss","modal");
-
     if(!mname.match(formFormate)||!mdescription.match(formFormate)||!mprice.match(formFormate)){
         alert("Please fill all the Details");
         return
@@ -296,33 +296,28 @@ function editdata(x){
             }
             products[index].imageUrl=mimgUrl;
             localStorage.setItem("Products" , JSON.stringify(products));
-        
         }
-    
     })
     mimgUrl=undefined;
+    localStorage.setItem("Products" , JSON.stringify(products));
     showall(JSON.parse(localStorage.getItem("Products")));
 }
 showall(JSON.parse(localStorage.getItem("Products")));
+// SEARCH LOGIC FUNCTION
 function search(){
     let filtercategory =  document.getElementById("filter-category").value;
     let filtervalue  = document.getElementById("filtertext").value;
-    // if(filtervalue.length==0){
-    //     alert("Please enter something");
-    //     return
-    // }
     console.log(filtercategory,filtervalue);
     products =  JSON.parse(localStorage.getItem("Products"));
      let filtered_array = products.filter(function(x){
         if(x[filtercategory].toUpperCase().includes(filtervalue.toUpperCase())) {
             return x;
         }
-        
     });
      console.log(filtered_array);
      showall(filtered_array)
 }
-//debouncing
+//debouncing FOR SEARCH
 function debounce(){
     let timer;
     return function(){
@@ -331,23 +326,23 @@ function debounce(){
           search();
         },300)
     }
-    
 }
+// CALLLED WHEN SEARCH INPUT CHANEGD
 const searchproduct =  debounce();
-
-
+//UPDATE THE VALUE IN RANGE
 function updaterange(){
     let rangevalue;
     rangevalue = document.getElementById("pricefilter").value;
     document.getElementById("currentvalue").innerHTML=rangevalue;
 }
 updaterange();
+// CLEARING THE PRICE RNAGE FILTER
 function clearrange(){
     document.getElementById("pricefilter").value=10000;
     updaterange();
     showall(JSON.parse(localStorage.getItem("Products")));
-    
 }
+// LOGIC TO FILTER THE PRODUCTS IN THE GIVEN RANGE
 function showrange(){
     updaterange();
     rangevalue = document.getElementById("pricefilter").value;
@@ -356,7 +351,6 @@ function showrange(){
         if(Number(x.price)>=0 && Number(x.price)<=Number(rangevalue)) {
             return x;
         }
-        
     });
     showall(filtered_array)
     document.getElementById("filterbutton").innerHTML="Clear Filter";
@@ -364,4 +358,4 @@ function showrange(){
 }
 
 
-    _
+    
