@@ -7,6 +7,7 @@ let imgUrl;
 let applyfilter=true;
 let sortcategory = document.getElementById("sort-category");
 let isasc=false;
+
 // Fetching the Local stored array if not null 
 if(JSON.parse(localStorage.getItem("Products"))!=null){
     products = JSON.parse(localStorage.getItem("Products"));
@@ -91,11 +92,14 @@ function cancelsearch(){
 }
 // Logic for Add Product Image Url Storing 
 let uploadPic = document.querySelector("#productimage");
-    uploadPic.onchange = () => { 
+
+uploadPic.onchange = () => { 
+        let updatedimg = document.querySelector("#add-product-img"); 
         if (uploadPic.files[0].size < 1000000) { 
             let fReader = new FileReader(); 
             fReader.onload = function (e) { 
                  imgUrl = e.target.result; 
+                 updatedimg.src=imgUrl
                  };
                  fReader.readAsDataURL(uploadPic.files[0]);
         } else {
@@ -115,6 +119,8 @@ function resetform(){
 }
 // ADDING NEW PRODUCT TO LOCAL STORAGE
 function manageinput(){
+
+    let updatedimg = document.querySelector("#add-product-img"); 
     let form = document.getElementById("inputform");
     let name = document.getElementById("productname").value;
     let id = document.getElementById("productid").value;
@@ -126,6 +132,7 @@ function manageinput(){
         alert("Please fill all the Details");
         return
     }else{
+        
         submitbutton.setAttribute("data-dismiss","modal");
         products.push({
             id:id,
@@ -135,6 +142,7 @@ function manageinput(){
             imageUrl:imgUrl
         });
         form.reset();
+        updatedimg.src="assets/download.png";
         localStorage.setItem("Products" , JSON.stringify(products));
         products =  JSON.parse(localStorage.getItem("Products"));
         showall(JSON.parse(localStorage.getItem("Products")));
@@ -240,7 +248,7 @@ function updateitem(x){
                 <input type="number" class="form-control" id="mproductprice" placeholder="Enter the Price" value=${element.price} required>
               </div>
               <div>
-              <img class="edit-form-img" src=${element.imageUrl}>
+              <img id="edit-product-img" class="edit-form-img" src=${element.imageUrl}>
               </div>
               <div class="form-row">
                 <div class="form-group col-md-6">
@@ -261,7 +269,7 @@ function updateitem(x){
 // Edit Modal Image handler
 function changeimg(){
     let muploadPic = document.querySelector("#mproductimage"); 
-    let updatedimg = document.querySelector(".edit-form-img"); 
+    let updatedimg = document.querySelector("#edit-product-img"); 
     let mfReader = new FileReader(); 
     mfReader.onload = function (e) { 
          mimgUrl = e.target.result; 
@@ -338,7 +346,7 @@ function updaterange(){
 updaterange();
 // CLEARING THE PRICE RNAGE FILTER
 function clearrange(){
-    document.getElementById("pricefilter").value=10000;
+    document.getElementById("pricefilter").value=100000;
     updaterange();
     showall(JSON.parse(localStorage.getItem("Products")));
 }
