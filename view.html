@@ -11,6 +11,11 @@
 
     <title>Document</title>
     <style>
+        .card{
+            min-width: 350px;
+            max-width: 66%;
+            margin: 10% auto;
+        }
         .card-img-top{
             width: 57%;
         }
@@ -37,26 +42,40 @@
 </body>
 <script>
    let  html="";
+   let error="";
    let products= JSON.parse(localStorage.getItem("Products"));
    let id = window.location.href.split("=")[1];
-   products.forEach(element => {
-    if(element.id==id){
-     html+=`<div class="card text-center">
-  <div class="card-header">
-    Product ID:-
-    ${element.id}
-  </div>
-  <div class="card-body">
-    <h3 class="card-title">${element.name}</h3>
-    <img class="card-img-top" src=${element.imageUrl} alt="Card image cap" width="50%" height="50%">
-    <p class="card-text">${element.description}</p>
-    <h5 class="card-title">Rs.${element.price}</h5>
-    <a href="./index.html" class="btn btn-primary">Go Back</a>
-  </div>
-
-</div>`
-    }
-   });
-   document.getElementsByClassName("container")[0].innerHTML=html
-</script>
-</html>
+   console.log(id);
+      let filteredArray =  products.filter(element =>  element.id==id)
+      if(filteredArray.length==0){
+              error+=`<div class="card text-center">
+                  <div class="card-header">
+                  </div>
+                  <div class="card-body">
+                  <h3 class="card-title">ERROR</h3>
+                  <p class="card-text">NO PAGE FOUND</p>
+                  <a href="./index.html" class="btn btn-primary">Go Back</a>
+                  </div>
+                  </div>`
+              document.getElementsByClassName("container")[0].innerHTML=error;
+              error="";
+      }else{
+        html+=`<div class="card text-center">
+      <div class="card-header">
+        Product ID:-
+        ${filteredArray[0].id}
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">${filteredArray[0].name}</h3>
+        <img class="card-img-top" src=${filteredArray[0].imageUrl} alt="Card image cap" width="50%" height="50%">
+        <p class="card-text">${filteredArray[0].description}</p>
+        <h5 class="card-title">Rs.${filteredArray[0].price}</h5>
+        <a href="./index.html" class="btn btn-primary">Go Back</a>
+      </div>
+    
+      </div>`;
+      document.getElementsByClassName("container")[0].innerHTML=html;
+      }
+    
+    </script>
+    </html>
