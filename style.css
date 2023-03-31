@@ -1,0 +1,151 @@
+.title{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+textarea{
+    resize: none;
+}
+
+/* NAVBAR CSS */
+nav{
+    margin-bottom: 2%;
+}
+
+.nav-item{
+    margin: 2% 5%;
+}
+
+.navbar-brand{
+    font-family: 'Roboto', sans-serif;
+    font-size: 5vw;
+    font-weight: bolder;
+    
+}
+/* SEARCH SORT FILTER CSS */
+.search{
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+.filter-sort{
+    margin: 5%;
+}
+
+.fa-solid{
+    color: white;
+}
+
+.form-select{
+    width: 100%;
+}
+
+/* PRODUCT CART CSS */
+.card{
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+.card-title{
+    font-weight: bold;
+}
+
+.card-img-top{
+    height: 100%;
+    height: 222px;
+}
+
+.card-img-top img{
+    height: 100%;
+    width: 100%;
+}
+
+.card-button-group{
+    display: flex;
+    justify-content: center;
+}
+
+.card-details{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body{
+    flex: 1 1 auto;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    max-width: 18rem;
+    min-height: 32rem;
+    justify-content: space-between;
+}
+/* INNER STYLING OF CARD */
+.description{
+    margin-bottom: 10px;
+}
+.title{
+    font-family: 'Roboto', sans-serif;
+    font-size: large;
+    font-weight: bold;
+}
+
+.card-text{
+    display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 48px;
+  margin:0;
+}
+
+.price{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin:0;
+}
+
+.name{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin:0;
+}
+
+.d-flex{
+    gap:10px
+}
+
+/* CARD CONTAINER CSS */
+#product-box{
+    margin: 2rem auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+/* EDIT FORM MODAL */
+.edit-form-img{
+    max-height: 150px;
+    max-width: 150px;
+    margin: 5px;
+    border: 2px solid black;
+}
+
+
+/* MEDIA QUERIES */
+@media screen and (max-width:775px) {
+    .search{
+        flex-direction: column;
+    }
+    #product-box{
+        justify-content: center;
+    }
+}
